@@ -1,15 +1,7 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
-
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
 
 
 export default class ProductForm extends React.Component {
@@ -18,52 +10,56 @@ export default class ProductForm extends React.Component {
     super(props);
 
     this.loadData = this.loadData.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
+    const record_id = parseInt(props.match.params.id, 10);
 
     this.state = {
-      products: []
+      id: record_id,
+      description: '',
+      edit_mode: false
     }
   }
 
   loadData() {
-    axios
-      .get('http://localhost:9393/api/products')
-      .then(res => {
-        this.setState({products: res.data});
-      });
+    if(this.state.edit_mode)
+      axios
+        .get(`http://localhost:9393/api/products/${this.props.id}`)
+        .then(res => {
+          this.setState(res.data);
+        });
   }
 
   componentDidMount() {
     this.loadData();
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+    var author = this.state.author.trim();
+    var text = this.state.text.trim();
+    if (!text || !author) {
+      return;
+    }
+    // TODO: send request to the server
+    this.setState({author: '', text: ''});
+  }
+
   render() {
     return <div>
-      <Table multiSelectable={true}>
-        <TableHeader>
-          <TableRow>
-            <TableHeaderColumn>ID</TableHeaderColumn>
-            <TableHeaderColumn>Code</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Description</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {this.state.products.map( (row, index) => (
-            <TableRow key={index}>
-              <TableRowColumn>{row.id}</TableRowColumn>
-              <TableRowColumn>{row.code}</TableRowColumn>
-              <TableRowColumn>{row.name}</TableRowColumn>
-              <TableRowColumn>{row.description}</TableRowColumn>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <br />
-      <RaisedButton 
-        primary={true} 
-        label={'Reload'}
-        onClick={this.loadData}
-      />
+      <form onSubmit={this.handleSubmit}>
+        <TextField
+          hintText="Description"
+          value={this.state.description}
+          onChange={this.handleAuthorChange}
+        />
+        <br/>
+        <RaisedButton 
+          primary={true} 
+          label={'Reload'}
+          onClick={this.loadData}
+        />
+      </form>
     </div>
   }
 };

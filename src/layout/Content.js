@@ -8,8 +8,9 @@ export default class Content extends React.Component {
     return <main>
       <Switch>
         {/* <Route exact path='/' component={Home}/> */}
-        <Route path='/products' component={Products}/>
         <Route path='/products/new' component={ProductForm}/>
+        <Route path='/products/:id' component={ProductForm}/>
+        <Route path='/products' component={Products}/>
       </Switch>
     </main>
   }
