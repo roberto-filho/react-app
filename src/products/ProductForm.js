@@ -2,6 +2,7 @@ import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 import TextField from 'material-ui/TextField';
+import Snackbar from 'material-ui/Snackbar';
 
 
 export default class ProductForm extends React.Component {
@@ -13,15 +14,23 @@ export default class ProductForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
 
     const record_id = parseInt(props.match.params.id, 10);
 
     this.state = {
       id: record_id || 0,
+      code: '',
       name: '',
       description: '',
-      edit_mode: false // TODO create an edit mode
+      edit_mode: false, // TODO create an edit mode
+      errorSnackbarOpen: false
     }
+  }
+  
+  handleRequestClose() {
+    this.setState({errorSnackbarOpen: false});
   }
 
   getRecord() {
@@ -52,7 +61,11 @@ export default class ProductForm extends React.Component {
   handleNameChange(event) {
     this.setState({name: event.target.value});
   }
-  
+
+  handleCodeChange(event) {
+    this.setState({code: event.target.value});
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     var name_ = this.state.name.trim();
@@ -65,17 +78,26 @@ export default class ProductForm extends React.Component {
     // TODO: send request to the server
     this.setState({name: name_, description: desc_});
 
-    console.log(this.state);
-
     axios.post('http://localhost:9393/api/products', this.getRecord())
       .then(res => {
         this.setState({id: res.data.id});
+        // TODO Show success message
+        // TODO Clear form fields
+      }).catch(error => {
+        // TODO Show error message
+        this.setState({errorSnackbarOpen: true});
       });
   }
   
   render() {
     return <div>
       <form onSubmit={this.handleSubmit}>
+      <TextField
+          hintText="Code"
+          value={this.state.code}
+          onChange={this.handleCodeChange}
+        />
+        <br/>
         <TextField
           hintText="Name"
           value={this.state.name}
@@ -94,6 +116,12 @@ export default class ProductForm extends React.Component {
           label={'Save'}
         />
       </form>
+      <Snackbar
+        open={this.state.errorSnackbarOpen}
+        message="An error occurred."
+        autoHideDuration={4000}
+        onRequestClose={this.handleRequestClose}
+      />
     </div>
   }
 };
