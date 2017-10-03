@@ -25,16 +25,20 @@ export default class ProductForm extends React.Component {
       name: '',
       description: '',
       edit_mode: false, // TODO create an edit mode
-      errorSnackbarOpen: false
+      snackbar: {
+        open: false,
+        message: ''
+      }
     }
   }
   
   handleRequestClose() {
-    this.setState({errorSnackbarOpen: false});
+    this.setState({snackbar: {open: false, message: ''}});
   }
 
   getRecord() {
     return {
+      code: this.state['code'],
       name: this.state['name'],
       description: this.state['description']
     }
@@ -75,17 +79,36 @@ export default class ProductForm extends React.Component {
       return;
     }
 
-    // TODO: send request to the server
+    // Send request to the server
     this.setState({name: name_, description: desc_});
 
     axios.post('http://localhost:9393/api/products', this.getRecord())
       .then(res => {
-        this.setState({id: res.data.id});
-        // TODO Show success message
-        // TODO Clear form fields
+        // Show success message
+        // Clear form fields
+        this.setState({
+          id: res.data.id,
+          code: '',
+          name: '',
+          description: '',
+          snackbar: {
+            open: true, 
+            message: `Successfully saved: [${res.data.id}]`
+          }
+        });
       }).catch(error => {
-        // TODO Show error message
-        this.setState({errorSnackbarOpen: true});
+        // Show error message
+        const isValidationError = error.response && error.response.status === 422;
+        let errorMessage = isValidationError
+          ? error.response.data.toString()
+          : error.toString();
+        
+        this.setState({
+          snackbar: {
+            open: true, 
+            message: errorMessage
+          }
+        });
       });
   }
   
@@ -93,22 +116,23 @@ export default class ProductForm extends React.Component {
     return <div>
       <form onSubmit={this.handleSubmit}>
       <TextField
-          hintText="Code"
+          floatingLabelText="Code"
           value={this.state.code}
           onChange={this.handleCodeChange}
         />
         <br/>
         <TextField
-          hintText="Name"
+          floatingLabelText="Name"
           value={this.state.name}
           onChange={this.handleNameChange}
         />
         <br/>
         <TextField
-          hintText="Description"
+          floatingLabelText="Description"
           value={this.state.description}
           onChange={this.handleDescriptionChange}
         />
+        <br/>
         <br/>
         <RaisedButton 
           type={'submit'}
@@ -117,8 +141,8 @@ export default class ProductForm extends React.Component {
         />
       </form>
       <Snackbar
-        open={this.state.errorSnackbarOpen}
-        message="An error occurred."
+        open={this.state.snackbar.open}
+        message={this.state.snackbar.message}
         autoHideDuration={4000}
         onRequestClose={this.handleRequestClose}
       />
