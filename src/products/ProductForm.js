@@ -4,7 +4,6 @@ import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 
-
 export default class ProductForm extends React.Component {
 
   constructor(props) {
@@ -70,22 +69,29 @@ export default class ProductForm extends React.Component {
     this.setState({code: event.target.value});
   }
 
+  isValidPostData(data) {
+    const name = data.name.trim();
+    const desc = data.description.trim();
+    const code = data.code.trim();
+    
+    // Sanity checks
+    return !(!name || !desc || !code);
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-    var name_ = this.state.name.trim();
-    var desc_ = this.state.description.trim();
-    // Sanity checks
-    if (!name_ || !desc_) {
+    
+    if(!this.isValidPostData(this.state)) {
       return;
     }
 
     // Send request to the server
-    this.setState({name: name_, description: desc_});
-
     axios.post('http://localhost:9393/api/products', this.getRecord())
       .then(res => {
         // Show success message
         // Clear form fields
+        const successMessage = `Successfully saved: [${res.data.id}]`;
+
         this.setState({
           id: res.data.id,
           code: '',
@@ -93,14 +99,14 @@ export default class ProductForm extends React.Component {
           description: '',
           snackbar: {
             open: true, 
-            message: `Successfully saved: [${res.data.id}]`
+            message: successMessage
           }
         });
       }).catch(error => {
         // Show error message
         const isValidationError = error.response && error.response.status === 422;
         let errorMessage = isValidationError
-          ? error.response.data.toString()
+          ? JSON.stringify(error.response.data)
           : error.toString();
         
         this.setState({
