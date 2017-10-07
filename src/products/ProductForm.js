@@ -2,7 +2,7 @@ import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 import TextField from 'material-ui/TextField';
-import Snackbar from 'material-ui/Snackbar';
+import NotificationSystem from 'react-notification-system';
 
 export default class ProductForm extends React.Component {
 
@@ -14,7 +14,6 @@ export default class ProductForm extends React.Component {
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
-    this.handleRequestClose = this.handleRequestClose.bind(this);
 
     const record_id = parseInt(props.match.params.id, 10);
 
@@ -23,16 +22,8 @@ export default class ProductForm extends React.Component {
       code: '',
       name: '',
       description: '',
-      edit_mode: false, // TODO create an edit mode
-      snackbar: {
-        open: false,
-        message: ''
-      }
+      edit_mode: record_id !== 0 // TODO create an edit mode
     }
-  }
-  
-  handleRequestClose() {
-    this.setState({snackbar: {open: false, message: ''}});
   }
 
   getRecord() {
@@ -46,7 +37,7 @@ export default class ProductForm extends React.Component {
   loadData() {
     if(this.state.edit_mode) {
       axios
-        .get(`http://localhost:9393/api/products/${this.props.id}`)
+        .get(`http://localhost:9393/api/products/${this.state.id}`)
         .then(res => {
           this.setState(res.data);
         });
@@ -54,7 +45,22 @@ export default class ProductForm extends React.Component {
   }
 
   componentDidMount() {
+    this._notifications = this.refs.notifications;
     this.loadData();
+  }
+
+  notifyError(message) {
+    this._notifications.addNotification({
+      message: message,
+      level: 'error'
+    });
+  }
+
+  notifyInfo(message) {
+    this._notifications.addNotification({
+      message: message,
+      level: 'success'
+    });
   }
   
   handleDescriptionChange(event) {
@@ -78,6 +84,16 @@ export default class ProductForm extends React.Component {
     return !(!name || !desc || !code);
   }
 
+  getErrorFromResponse(error) {
+    const isValidationError = error.response && error.response.status === 422;
+    const isError = error.response && error.response.data;
+    let errorMessage = isValidationError
+      ? JSON.stringify(error.response.data)
+      : (isError ? error.response.data : error.toString());
+
+    return errorMessage;
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     
@@ -85,36 +101,33 @@ export default class ProductForm extends React.Component {
       return;
     }
 
+    const isEditing = this.state.edit_mode;
+
     // Send request to the server
-    axios.post('http://localhost:9393/api/products', this.getRecord())
+    const url = 'http://localhost:9393/api/products'+(isEditing ? `/${this.state.id}` : '');
+
+    const method = isEditing ? axios.put : axios.post;
+
+    method(url, this.getRecord())
       .then(res => {
         // Show success message
         // Clear form fields
-        const successMessage = `Successfully saved: [${res.data.id}]`;
+        const successMessage = `Successfully saved: [${this.state.id}] ${this.state.description}`;
 
+        this.notifyInfo(successMessage);
+
+        // TODO If it's in edit mode, redirect to listing
         this.setState({
           id: res.data.id,
           code: '',
           name: '',
           description: '',
-          snackbar: {
-            open: true, 
-            message: successMessage
-          }
+          edit_mode: false // Clears edit mode
         });
+
       }).catch(error => {
         // Show error message
-        const isValidationError = error.response && error.response.status === 422;
-        let errorMessage = isValidationError
-          ? JSON.stringify(error.response.data)
-          : error.toString();
-        
-        this.setState({
-          snackbar: {
-            open: true, 
-            message: errorMessage
-          }
-        });
+        this.notifyError(this.getErrorFromResponse(error));
       });
   }
   
@@ -146,12 +159,7 @@ export default class ProductForm extends React.Component {
           label={'Save'}
         />
       </form>
-      <Snackbar
-        open={this.state.snackbar.open}
-        message={this.state.snackbar.message}
-        autoHideDuration={4000}
-        onRequestClose={this.handleRequestClose}
-      />
+      <NotificationSystem ref="notifications" />
     </div>
   }
 };
