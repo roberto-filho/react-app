@@ -22,7 +22,7 @@ export default class ProductForm extends React.Component {
       code: '',
       name: '',
       description: '',
-      edit_mode: record_id !== 0 // TODO create an edit mode
+      edit_mode: Boolean(record_id) // TODO create an edit mode
     }
   }
 
@@ -133,6 +133,7 @@ export default class ProductForm extends React.Component {
   
   render() {
     return <div>
+      <NotificationSystem ref="notifications" />
       <form onSubmit={this.handleSubmit}>
       <TextField
           floatingLabelText="Code"
@@ -159,7 +160,6 @@ export default class ProductForm extends React.Component {
           label={'Save'}
         />
       </form>
-      <NotificationSystem ref="notifications" />
     </div>
   }
 };
