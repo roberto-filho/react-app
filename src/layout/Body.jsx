@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import Products from '../products/Products';
 import ProductForm from '../products/ProductForm';
 
-export default class Content extends React.Component {
+export default class Body extends React.Component {
   render() {
     return <main>
       <Switch>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Header from './layout/Header';
-import Content from './layout/Content';
+import Content from './layout/Body';
 
 export default class App extends Component {
   render() {
