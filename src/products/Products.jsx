@@ -17,14 +17,12 @@ export default class Products extends React.Component {
   constructor(props) {
     super(props);
 
-    this.loadData = this.loadData.bind(this);
-
     this.state = {
       products: []
     }
   }
 
-  loadData() {
+  loadData = () => {
     axios
       .get('http://localhost:9393/api/products')
       .then(res => {

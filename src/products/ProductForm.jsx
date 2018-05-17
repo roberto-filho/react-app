@@ -9,12 +9,6 @@ export default class ProductForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.loadData = this.loadData.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleCodeChange = this.handleCodeChange.bind(this);
-
     const record_id = parseInt(props.match.params.id, 10);
 
     this.state = {
@@ -34,7 +28,7 @@ export default class ProductForm extends React.Component {
     }
   }
 
-  loadData() {
+  loadData = () => {
     if(this.state.edit_mode) {
       axios
         .get(`http://localhost:9393/api/products/${this.state.id}`)
@@ -63,15 +57,15 @@ export default class ProductForm extends React.Component {
     });
   }
   
-  handleDescriptionChange(event) {
+  handleDescriptionChange = (event) => {
     this.setState({description: event.target.value});
   }
 
-  handleNameChange(event) {
+  handleNameChange = (event) => {
     this.setState({name: event.target.value});
   }
 
-  handleCodeChange(event) {
+  handleCodeChange = (event) => {
     this.setState({code: event.target.value});
   }
 
@@ -94,7 +88,7 @@ export default class ProductForm extends React.Component {
     return errorMessage;
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault();
     
     if(!this.isValidPostData(this.state)) {
