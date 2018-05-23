@@ -42,6 +42,8 @@ export default class ProductForm extends React.Component {
   }
   
   handleFileChange = (event) => {
+    console.log('Logging selected files for upload:');
+    
     console.log(event.target.files);
     
     this.setState({file: event.target.files[0]})
@@ -59,7 +61,7 @@ export default class ProductForm extends React.Component {
       .then(res => {
         // Show success message
         // Clear form fields
-        const successMessage = `Successfully uploaded file: [${this.file}]`;
+        const successMessage = `Successfully uploaded file: [${this.state.file.name}]`;
 
         this.notifyInfo(successMessage);
 
