@@ -1,6 +1,5 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import axios from 'axios';
+import { PropTypes } from 'prop-types';
 
 import {
   Table,
@@ -11,59 +10,45 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 
+export default class Transactions extends React.Component {
 
-export default class Products extends React.Component {
-
-  constructor(props) {
-    super(props);
-
-    this.loadData = this.loadData.bind(this);
-
-    this.state = {
-      products: []
-    }
+  static propTypes = {
+    data: PropTypes.array,
+    show: PropTypes.bool
   }
 
-  loadData() {
-    axios
-      .get('http://localhost:9393/api/products')
-      .then(res => {
-        this.setState({products: res.data});
-      });
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
-  componentDidMount() {
-    this.loadData();
+  Transactions = (data) => {
+    return (
+      <div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderColumn>ID</TableHeaderColumn>
+              <TableHeaderColumn>Date</TableHeaderColumn>
+              <TableHeaderColumn>Description</TableHeaderColumn>
+              <TableHeaderColumn>value</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map( (row, index) => (
+              <TableRow key={index}>
+                <TableRowColumn>{row.index}</TableRowColumn>
+                <TableRowColumn>{row.date}</TableRowColumn>
+                <TableRowColumn>{row.description}</TableRowColumn>
+                <TableRowColumn>{row.value}</TableRowColumn>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
 
   render() {
-    return <div>
-      <Table multiSelectable={true}>
-        <TableHeader>
-          <TableRow>
-            <TableHeaderColumn>ID</TableHeaderColumn>
-            <TableHeaderColumn>Code</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Description</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {this.state.products.map( (row, index) => (
-            <TableRow key={index}>
-              <TableRowColumn>{row.id}</TableRowColumn>
-              <TableRowColumn>{row.code}</TableRowColumn>
-              <TableRowColumn>{row.name}</TableRowColumn>
-              <TableRowColumn>{row.description}</TableRowColumn>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <br />
-      <RaisedButton 
-        primary={true} 
-        label={'Reload'}
-        onClick={this.loadData}
-      />
-    </div>
+    return this.props.show ? this.Transactions(this.props.data) : <div />;
   }
 };

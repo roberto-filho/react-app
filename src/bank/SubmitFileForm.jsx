@@ -3,13 +3,17 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {post} from 'axios';
 import NotificationSystem from 'react-notification-system';
 
+import Transactions from './Transactions';
+
 export default class ProductForm extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      file: null
+      file: null,
+      showTable: false,
+      trxs: []
     }
   }
 
@@ -65,6 +69,11 @@ export default class ProductForm extends React.Component {
 
         this.notifyInfo(successMessage);
 
+        this.setState({
+          trxs: res.data,
+          showTable: true
+        });
+
       }).catch(error => {
         // Show error message
         this.notifyError(this.getErrorFromResponse(error));
@@ -72,21 +81,30 @@ export default class ProductForm extends React.Component {
   }
   
   render() {
-    return <div>
-      <NotificationSystem ref= 'notifications' />
-      <form onSubmit={this.handleSubmit}>
-        <RaisedButton
-          containerElement='label'
-          label='Arquivo de transações'>
-          <input type='file' onChange={this.handleFileChange}/>
-        </RaisedButton>
-        <br />
-        <br />
-        <RaisedButton 
-          type={'submit'}
-          primary={true} 
-          label={'Save'} />
-      </form>
-    </div>
+    return (
+      <div>
+        
+        <NotificationSystem ref= 'notifications' />
+
+        <form onSubmit={this.handleSubmit}>
+          <RaisedButton
+            containerElement='label'
+            label='Arquivo de transações'>
+            <input type='file' onChange={this.handleFileChange}/>
+          </RaisedButton>
+          <br />
+          <br />
+          <RaisedButton 
+            type={'submit'}
+            primary={true} 
+            label="Upload and read" />
+        </form>
+
+        <Transactions
+          data={this.state.trxs}
+          show={this.state.showTable} />
+
+      </div>
+    );
   }
 };
