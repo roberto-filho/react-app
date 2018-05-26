@@ -1,7 +1,11 @@
 import React from 'react';
-import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
+import AppBar from '@material-ui/core/AppBar';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+
+import MenuIcon from '@material-ui/icons/Menu';
+
+import Menus from "./Menus";
 
 export default class Header extends React.Component {
 
@@ -12,21 +16,20 @@ export default class Header extends React.Component {
 
   toggleDrawer = () => this.setState({drawerOpen: !this.state.drawerOpen});
 
-  go = () => {
-    // Programatically navigate to some page
-  }
-
   render() {
       return (
         <div>
-          <AppBar title="Dashboard" onLeftIconButtonTouchTap={this.toggleDrawer} />
+          <AppBar position="static" title="Dashboard">
+            <IconButton color="inherit" aria-label="Menu" onClick={this.toggleDrawer}>
+              <MenuIcon />
+            </IconButton>
+          </AppBar>
           <Drawer 
+            anchor="left"
             ref={(component)=>{this.leftDrawer = component;}}
-            docked={false}
             open={this.state.drawerOpen}
-            onRequestChange={(drawerOpen) => this.setState({drawerOpen})}
-          >
-            <MenuItem primaryText="Products" onClick={this.go}/>
+            onClose={() => this.setState({drawerOpen: false})}>
+            <Menus />
           </Drawer>
         </div>
       )

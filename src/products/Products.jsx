@@ -1,16 +1,12 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 import axios from 'axios';
 
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
-
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 export default class Products extends React.Component {
 
@@ -36,32 +32,33 @@ export default class Products extends React.Component {
 
   render() {
     return <div>
-      <Table multiSelectable={true}>
-        <TableHeader>
+      <Table>
+        <TableHead>
           <TableRow>
-            <TableHeaderColumn>ID</TableHeaderColumn>
-            <TableHeaderColumn>Code</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Description</TableHeaderColumn>
+            <TableCell>ID</TableCell>
+            <TableCell>Code</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Description</TableCell>
           </TableRow>
-        </TableHeader>
+        </TableHead>
         <TableBody>
           {this.state.products.map( (row, index) => (
             <TableRow key={index}>
-              <TableRowColumn>{row.id}</TableRowColumn>
-              <TableRowColumn>{row.code}</TableRowColumn>
-              <TableRowColumn>{row.name}</TableRowColumn>
-              <TableRowColumn>{row.description}</TableRowColumn>
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{row.code}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.description}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
       <br />
-      <RaisedButton 
-        primary={true} 
-        label={'Reload'}
-        onClick={this.loadData}
-      />
+      <Button
+        variant="raised"
+        color="primary"
+        onClick={this.loadData}>
+        Reload
+      </Button>
     </div>
   }
 };

@@ -1,14 +1,11 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 export default class Transactions extends React.Component {
 
@@ -25,21 +22,21 @@ export default class Transactions extends React.Component {
     return (
       <div>
         <Table>
-          <TableHeader>
+          <TableHead>
             <TableRow>
-              <TableHeaderColumn>ID</TableHeaderColumn>
-              <TableHeaderColumn>Date</TableHeaderColumn>
-              <TableHeaderColumn>Description</TableHeaderColumn>
-              <TableHeaderColumn>value</TableHeaderColumn>
+              <TableCell>ID</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>value</TableCell>
             </TableRow>
-          </TableHeader>
+          </TableHead>
           <TableBody>
             {data.map( (row, index) => (
               <TableRow key={index}>
-                <TableRowColumn>{row.index}</TableRowColumn>
-                <TableRowColumn>{row.date}</TableRowColumn>
-                <TableRowColumn>{row.description}</TableRowColumn>
-                <TableRowColumn>{row.value}</TableRowColumn>
+                <TableCell>{row.index}</TableCell>
+                <TableCell>{row.date}</TableCell>
+                <TableCell>{row.description}</TableCell>
+                <TableCell>{row.value}</TableCell>
               </TableRow>
             ))}
           </TableBody>

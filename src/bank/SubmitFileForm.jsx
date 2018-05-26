@@ -1,5 +1,5 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 import {post} from 'axios';
 import NotificationSystem from 'react-notification-system';
 
@@ -87,17 +87,18 @@ export default class ProductForm extends React.Component {
         <NotificationSystem ref= 'notifications' />
 
         <form onSubmit={this.handleSubmit}>
-          <RaisedButton
-            containerElement='label'
-            label='Arquivo de transações'>
+          <Button variant="raised">
+            Arquivo de transações
             <input type='file' onChange={this.handleFileChange}/>
-          </RaisedButton>
+          </Button>
           <br />
           <br />
-          <RaisedButton 
-            type={'submit'}
-            primary={true} 
-            label="Upload and read" />
+          <Button 
+            variant="raised"
+            type="submit"
+            color="primary">
+            Upload and read
+          </Button>
         </form>
 
         <Transactions

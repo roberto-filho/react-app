@@ -1,7 +1,7 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 import NotificationSystem from 'react-notification-system';
 
 export default class ProductForm extends React.Component {
@@ -130,27 +130,27 @@ export default class ProductForm extends React.Component {
       <NotificationSystem ref="notifications" />
       <form onSubmit={this.handleSubmit}>
       <TextField
-          floatingLabelText="Code"
+          label="Code"
           value={this.state.code}
           onChange={this.handleCodeChange}
         />
         <br/>
         <TextField
-          floatingLabelText="Name"
+          label="Name"
           value={this.state.name}
           onChange={this.handleNameChange}
         />
         <br/>
         <TextField
-          floatingLabelText="Description"
+          label="Description"
           value={this.state.description}
           onChange={this.handleDescriptionChange}
         />
         <br/>
         <br/>
-        <RaisedButton 
+        <Button 
           type={'submit'}
-          primary={true} 
+          color="primary"
           label={'Save'}
         />
       </form>
