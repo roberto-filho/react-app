@@ -29,7 +29,7 @@ export default class Header extends React.Component {
             ref={(component)=>{this.leftDrawer = component;}}
             open={this.state.drawerOpen}
             onClose={() => this.setState({drawerOpen: false})}>
-            <Menus />
+            <Menus toggle={this.toggleDrawer} />
           </Drawer>
         </div>
       )

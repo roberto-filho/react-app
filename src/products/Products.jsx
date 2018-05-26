@@ -55,7 +55,7 @@ export default class Products extends React.Component {
       <br />
       <Button
         variant="raised"
-        color="primary"
+        color="secondary"
         onClick={this.loadData}>
         Reload
       </Button>

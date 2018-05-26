@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import FileUpload from '@material-ui/icons/FileUpload';
 import {post} from 'axios';
 import NotificationSystem from 'react-notification-system';
 
@@ -81,22 +82,34 @@ export default class ProductForm extends React.Component {
   }
   
   render() {
+    const inputStyle = {
+      display: 'none'
+    }
+    const selectedFile = this.state.file;
     return (
       <div>
         
         <NotificationSystem ref= 'notifications' />
 
         <form onSubmit={this.handleSubmit}>
-          <Button variant="raised">
-            Arquivo de transações
-            <input type='file' onChange={this.handleFileChange}/>
-          </Button>
+          <br />
+          <input
+            style={inputStyle}
+            id="button-file"
+            type="file"
+            onChange={this.handleFileChange} />
+          <label htmlFor="button-file">
+            <Button variant="raised" component="span" color="secondary">
+              <FileUpload />
+              {selectedFile ? selectedFile.name : 'Choose file'}
+            </Button>
+          </label>
           <br />
           <br />
           <Button 
             variant="raised"
             type="submit"
-            color="primary">
+            color="secondary">
             Upload and read
           </Button>
         </form>
