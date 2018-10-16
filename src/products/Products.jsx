@@ -54,7 +54,7 @@ export default class Products extends React.Component {
       </Table>
       <br />
       <Button
-        variant="raised"
+        variant="contained"
         color="secondary"
         onClick={this.loadData}>
         Reload

@@ -7,6 +7,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import Chip from '@material-ui/core/Chip';
+import Button from '@material-ui/core/Button';
+import {If} from 'react-control-statements';
+
 export default class Transactions extends React.Component {
 
   static propTypes = {
@@ -14,38 +18,78 @@ export default class Transactions extends React.Component {
     show: PropTypes.bool
   }
 
-  // constructor(props) {
-  //   super(props);
-  // }
+  handleCategories = (categories) => {
+    // Check if it's an array
+    if (categories instanceof Array) {
+      return categories;
+    }
 
-  Transactions = (data) => {
+    return [categories];
+  }
+
+  handleNewCategory = (row) => {
+    console.log('clicked!', JSON.stringify(row));
+  }
+
+  UncategorizedButton = (params) => {
+    const {row} = params;
+    // Add a + button to add category
     return (
-      <div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>value</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map( (row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.index}</TableCell>
-                <TableCell>{row.date}</TableCell>
-                <TableCell>{row.description}</TableCell>
-                <TableCell>{row.value}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <Button
+        variant="text"
+        color="secondary"
+        mini={true}
+        onClick={this.handleNewCategory.bind(this, row)}>
+        Add
+      </Button>
     );
   }
 
+  Category = (params) => {
+    const {row} = params;
+    const categoriesArray = this.handleCategories(row.categories);
+    
+    if (row.categories.id === 'x') {
+      // It's uncategorized, render the other one
+      return (
+        <this.UncategorizedButton row={row} />
+      )
+    } else {
+      return categoriesArray.map((c, i) => (
+        <Chip key={'c'+i} label={c.description} />
+      ));
+    }
+  }
+
   render() {
-    return this.props.show ? this.Transactions(this.props.data) : <div />;
+    const {show, data} = this.props;
+    return (
+      <div>
+        <If condition={show}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>DATE</TableCell>
+                <TableCell>DESCRIPTION</TableCell>
+                <TableCell>TAGS</TableCell>
+                <TableCell>Value</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map( (row, index) => (
+                <TableRow key={index}>
+                  <TableCell>{row.index}</TableCell>
+                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{row.description}</TableCell>
+                  <TableCell><this.Category row={row} /></TableCell>
+                  <TableCell>{row.value}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </If>
+      </div>
+    );
   }
 };

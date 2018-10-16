@@ -149,9 +149,9 @@ export default class ProductForm extends React.Component {
         <br/>
         <br/>
         <Button 
-          type={'submit'}
+          type="submit"
           color="primary"
-          label={'Save'}
+          label="Save"
         />
       </form>
     </div>

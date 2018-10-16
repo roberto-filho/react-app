@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import FileUpload from '@material-ui/icons/FileUpload';
+import Upload from 'mdi-material-ui/Upload';
 import {post} from 'axios';
 import NotificationSystem from 'react-notification-system';
 
@@ -99,15 +99,15 @@ export default class ProductForm extends React.Component {
             type="file"
             onChange={this.handleFileChange} />
           <label htmlFor="button-file">
-            <Button variant="raised" component="span" color="secondary">
-              <FileUpload />
+            <Button variant="contained" component="span" color="secondary">
+              <Upload />
               {selectedFile ? selectedFile.name : 'Choose file'}
             </Button>
           </label>
           <br />
           <br />
           <Button 
-            variant="raised"
+            variant="contained"
             type="submit"
             color="secondary">
             Upload and read

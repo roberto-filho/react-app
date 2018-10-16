@@ -8,7 +8,11 @@ export default class App extends Component {
 
   constructor() {
     super();
-    this.theme = createMuiTheme();
+    this.theme = createMuiTheme({
+      typography: {
+        useNextVariants: true,
+      },
+    });
   }
 
   render() {

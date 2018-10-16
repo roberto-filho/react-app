@@ -103,7 +103,7 @@ export default class Products extends React.Component {
       
       <br />
       <Button
-        variant="raised"
+        variant="contained"
         color="secondary"
         onClick={this.loadData}>
         Reload

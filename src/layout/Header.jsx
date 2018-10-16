@@ -2,6 +2,7 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
 
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -20,9 +21,11 @@ export default class Header extends React.Component {
       return (
         <div>
           <AppBar position="static" title="Dashboard">
-            <IconButton color="inherit" aria-label="Menu" onClick={this.toggleDrawer}>
-              <MenuIcon />
-            </IconButton>
+            <Toolbar>
+              <IconButton style={{marginLeft: -12}} color="inherit" aria-label="Menu" onClick={this.toggleDrawer}>
+                <MenuIcon />
+              </IconButton>
+            </Toolbar>
           </AppBar>
           <Drawer 
             anchor="left"
