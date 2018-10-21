@@ -7,15 +7,37 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import NotificationSystem from 'react-notification-system';
+
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import {If} from 'react-control-statements';
+
+import QuickCreateCategory from '../quick-create/QuickCreateCategory';
 
 export default class Transactions extends React.Component {
 
   static propTypes = {
     data: PropTypes.array,
     show: PropTypes.bool
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      openCreateCategoryDialog: false,
+    }
+  }
+
+  componentDidMount() {
+    this._notifications = this.refs.notifications;
+  }
+  
+  onError = (error) => {
+    this._notifications.addNotification({
+      message: error.message,
+      level: 'error'
+    });
   }
 
   handleCategories = (categories) => {
@@ -29,6 +51,29 @@ export default class Transactions extends React.Component {
 
   handleNewCategory = (row) => {
     console.log('clicked!', JSON.stringify(row));
+
+    this.setState({
+      openCreateCategoryDialog: true,
+      phraseForCategory: row.description,
+    });
+  }
+
+  handleCreateCategoryClose = (action, description) => {
+    if (action === 'canceled') {
+
+    }
+
+    if (action === 'created') {
+      // Notify
+      const successMessage = `Successfully created category: [${description}]`;
+
+      this._notifications.addNotification({
+        message: successMessage,
+        level: 'success'
+      });
+    }
+
+    this.setState({openCreateCategoryDialog: false});
   }
 
   UncategorizedButton = (params) => {
@@ -63,8 +108,10 @@ export default class Transactions extends React.Component {
 
   render() {
     const {show, data} = this.props;
+    const {openCreateCategoryDialog, phraseForCategory} = this.state;
     return (
       <div>
+        <NotificationSystem ref= 'notifications' />
         <If condition={show}>
           <Table>
             <TableHead>
@@ -88,6 +135,13 @@ export default class Transactions extends React.Component {
               ))}
             </TableBody>
           </Table>
+
+          <QuickCreateCategory
+            phrase={phraseForCategory}
+            onCancel={this.handleCreateCategoryClose.bind(this, 'canceled')}
+            onCreate={this.handleCreateCategoryClose.bind(this, 'created')}
+            open={openCreateCategoryDialog} />
+
         </If>
       </div>
     );

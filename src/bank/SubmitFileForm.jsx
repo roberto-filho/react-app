@@ -38,10 +38,10 @@ export default class ProductForm extends React.Component {
 
   getErrorFromResponse(error) {
     const isValidationError = error.response && error.response.status === 422;
-    const isError = error.response && error.response.data;
+    const isError = !!error.response && !!error.response.data;
     let errorMessage = isValidationError
       ? JSON.stringify(error.response.data)
-      : (isError ? error.response.data : error.toString());
+      : (isError ? error.response.data.toString() : error.toString());
 
     return errorMessage;
   }
