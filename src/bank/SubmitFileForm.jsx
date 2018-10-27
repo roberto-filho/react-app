@@ -5,6 +5,7 @@ import {post} from 'axios';
 import NotificationSystem from 'react-notification-system';
 
 import Transactions from './Transactions';
+import API from '../api/API';
 
 export default class ProductForm extends React.Component {
 
@@ -57,7 +58,7 @@ export default class ProductForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     
-    const url = 'http://localhost:9393/api/bank/upload';
+    const url = API.url('/api/bank/upload');
 
     const formData = new FormData();
     formData.append('file', this.state.file)

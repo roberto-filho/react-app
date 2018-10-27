@@ -10,6 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import axios from 'axios';
+import API from '../api/API';
 
 export default class QuickCreateCategory extends PureComponent {
 
@@ -38,11 +39,12 @@ export default class QuickCreateCategory extends PureComponent {
   handleCreate = () => {
     // Create the category
     return this.createCategory(this.state.description)
-      .then(data => this.props.onCreate());
+      .then(returned => this.props.onCreate(returned.payload))
+      .catch(this.onError);
   }
 
   createCategory = (description) => {
-    const url = 'http://localhost:9393/api/bank/categories';
+    const url = API.url('/api/bank/categories');
 
     // {"id": "4", "description": "posto colombo", "userChosen":true, "phrases": ["COMPRA CARTAO - COMPRA no estabelecimento POSTO COLOMBO          C"]}
     const payload = {
@@ -51,7 +53,13 @@ export default class QuickCreateCategory extends PureComponent {
       phrases: [this.props.phrase]
     }
 
-    return axios.post(url, payload).catch(this.onError);
+    return axios.post(url, payload)
+      .then(data => {
+        return {payload: {
+          id: data.id,
+          ...payload
+        }, response: data}
+      });
   }
 
   onError = (error) => {

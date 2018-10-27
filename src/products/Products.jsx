@@ -7,6 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import API from '../api/API';
 
 export default class Products extends React.Component {
 
@@ -20,7 +21,7 @@ export default class Products extends React.Component {
 
   loadData = () => {
     axios
-      .get('http://localhost:9393/api/products')
+      .get(API.url('/api/products'))
       .then(res => {
         this.setState({products: res.data});
       });

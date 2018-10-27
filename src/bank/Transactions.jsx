@@ -54,16 +54,17 @@ export default class Transactions extends React.Component {
 
     this.setState({
       openCreateCategoryDialog: true,
-      phraseForCategory: row.description,
+      row,
     });
   }
 
-  handleCreateCategoryClose = (action, description) => {
+  handleCreateCategoryClose = (action, createdCategory) => {
     if (action === 'canceled') {
 
     }
 
     if (action === 'created') {
+      const {description} = createdCategory;
       // Notify
       const successMessage = `Successfully created category: [${description}]`;
 
@@ -71,6 +72,14 @@ export default class Transactions extends React.Component {
         message: successMessage,
         level: 'success'
       });
+
+      // add category to row and set state
+      this.setState(prevState => ({
+        data: this.state.data,
+        row: {
+          categories: createdCategory,
+        }
+      }));
     }
 
     this.setState({openCreateCategoryDialog: false});
@@ -108,7 +117,7 @@ export default class Transactions extends React.Component {
 
   render() {
     const {show, data} = this.props;
-    const {openCreateCategoryDialog, phraseForCategory} = this.state;
+    const {openCreateCategoryDialog, row = {}} = this.state;
     return (
       <div>
         <NotificationSystem ref= 'notifications' />
@@ -137,7 +146,7 @@ export default class Transactions extends React.Component {
           </Table>
 
           <QuickCreateCategory
-            phrase={phraseForCategory}
+            phrase={row.description}
             onCancel={this.handleCreateCategoryClose.bind(this, 'canceled')}
             onCreate={this.handleCreateCategoryClose.bind(this, 'created')}
             open={openCreateCategoryDialog} />
