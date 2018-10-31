@@ -6,7 +6,7 @@ export default class API {
   
 
   static url(uri) {
-    return `http://localhost:9393${uri}`;
+    return `${uri}`;
   }
 
 }
