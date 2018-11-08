@@ -3,9 +3,9 @@ FROM node:9-alpine as builder
 RUN mkdir /home/node/app
 WORKDIR /home/node/app
 COPY package.json /home/node/app/package.json
-RUN npm install
+RUN yarn install
 COPY . /home/node/app
-RUN npm run build
+RUN yarn run build
 
 # production environment
 FROM nginx:1.13.9-alpine
