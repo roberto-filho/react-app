@@ -7,6 +7,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import Paper from '@material-ui/core/Paper';
+import Checkbox from '@material-ui/core/Checkbox';
+
 import NotificationSystem from 'react-notification-system';
 
 import Chip from '@material-ui/core/Chip';
@@ -14,19 +17,24 @@ import Button from '@material-ui/core/Button';
 import {If} from 'react-control-statements';
 
 import QuickCreateCategory from '../quick-create/QuickCreateCategory';
+import { List } from 'immutable';
 
 export default class Transactions extends React.Component {
 
   static propTypes = {
-    data: PropTypes.array,
+    data: PropTypes.objectOf(List),
     show: PropTypes.bool
   }
 
   constructor(props) {
     super(props);
+
     this.state = {
       openCreateCategoryDialog: false,
+      selectedItems: List(),
+      selectAll: false,
     }
+
   }
 
   componentDidMount() {
@@ -115,16 +123,81 @@ export default class Transactions extends React.Component {
     }
   }
 
+  handleSelectAll = (e, newValue) => {
+    
+    if (newValue) {
+      this.selectAll();
+    }
+    
+    if (!newValue) {
+      // Unselect all
+      this.setState({
+        selectedItems: List(),
+        selectAll: newValue,
+      });
+    }
+  }
+
+  selectAll = () => {
+    const {data} = this.props;
+    // Check all
+    // take props.data and set it to selectedItems
+    this.setState({
+      selectedItems: List(data),
+      selectAll: true,
+    });
+  }
+
+  handleSelectTransaction = (row, event, checked) => {
+    console.log(`row selected ${row.index}`, row);
+    let {selectedItems} = this.state;
+
+    if (checked) {
+      // Add to the list
+      selectedItems = selectedItems.push(row);
+    }
+    
+    if (!checked) {
+      // Remove from the list
+      const curentRowIndex = selectedItems
+        .findIndex(t => t.index === row.index);
+      selectedItems = selectedItems.remove(curentRowIndex);
+    }
+    // Add this to selected
+    this.setState({ selectedItems });
+  }
+
+  paperStyle = {
+    width: "80%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "2em",
+  };
+
   render() {
     const {show, data} = this.props;
-    const {openCreateCategoryDialog, row = {}} = this.state;
+    const {
+      openCreateCategoryDialog,
+      row = {},
+      selectAll,
+      selectedItems,
+    } = this.state;
+
+    const selectedIndexes = selectedItems.map(t => t.index);
+
     return (
-      <div>
+      <Paper style={this.paperStyle}>
         <NotificationSystem ref= 'notifications' />
         <If condition={show}>
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>
+                  <Checkbox
+                    checked={selectAll} 
+                    onChange={this.handleSelectAll}
+                    indeterminate={selectAll && selectedItems.size !== data.size} />
+                </TableCell>
                 <TableCell>ID</TableCell>
                 <TableCell>DATE</TableCell>
                 <TableCell>DESCRIPTION</TableCell>
@@ -135,6 +208,12 @@ export default class Transactions extends React.Component {
             <TableBody>
               {data.map( (row, index) => (
                 <TableRow key={index}>
+                  <TableCell>
+                    <Checkbox 
+                      checked={selectedIndexes.includes(row.index)}
+                      onChange={this.handleSelectTransaction.bind(this, row)}
+                      />
+                  </TableCell>
                   <TableCell>{row.index}</TableCell>
                   <TableCell>{row.date}</TableCell>
                   <TableCell>{row.description}</TableCell>
@@ -152,7 +231,7 @@ export default class Transactions extends React.Component {
             open={openCreateCategoryDialog} />
 
         </If>
-      </div>
+      </Paper>
     );
   }
 };

@@ -7,6 +7,8 @@ import NotificationSystem from 'react-notification-system';
 import Transactions from './Transactions';
 import API from '../api/API';
 
+import { List } from 'immutable';
+
 export default class ProductForm extends React.Component {
 
   constructor(props) {
@@ -15,7 +17,7 @@ export default class ProductForm extends React.Component {
     this.state = {
       file: null,
       showTable: false,
-      trxs: []
+      trxs: List(),
     }
   }
 
@@ -48,9 +50,8 @@ export default class ProductForm extends React.Component {
   }
   
   handleFileChange = (event) => {
-    console.log('Logging selected files for upload:');
-    
-    console.log(event.target.files);
+    // console.log('Logging selected files for upload:');
+    // console.log(event.target.files);
     
     this.setState({file: event.target.files[0]})
   }
@@ -72,7 +73,7 @@ export default class ProductForm extends React.Component {
         this.notifyInfo(successMessage);
 
         this.setState({
-          trxs: res.data,
+          trxs: List(res.data),
           showTable: true
         });
 
@@ -82,11 +83,13 @@ export default class ProductForm extends React.Component {
       });
   }
   
+  inputStyle = {
+    display: 'none'
+  };
+
   render() {
-    const inputStyle = {
-      display: 'none'
-    }
-    const selectedFile = this.state.file;
+    const {file: selectedFile, trxs, showTable} = this.state;
+
     return (
       <div>
         
@@ -95,7 +98,7 @@ export default class ProductForm extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <br />
           <input
-            style={inputStyle}
+            style={this.inputStyle}
             id="button-file"
             type="file"
             onChange={this.handleFileChange} />
@@ -116,8 +119,8 @@ export default class ProductForm extends React.Component {
         </form>
 
         <Transactions
-          data={this.state.trxs}
-          show={this.state.showTable} />
+          data={trxs}
+          show={showTable} />
 
       </div>
     );
