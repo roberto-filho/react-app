@@ -28,29 +28,37 @@ export default class QuickCreateCategory extends PureComponent {
     }
   }
 
-  // handleClose = () => {
-  //   this.setState({ open: false });
-  // }
+  componentDidMount() {
+    if (this.state.description !== '') {
+      this.setState({description: ''});
+    }
+  }
 
   handleCancel = () => {
+    this.setState({description: ''});
     this.props.onCancel();
   }
 
   handleCreate = () => {
+    const {description} = this.state;
     // Create the category
-    return this.createCategory(this.state.description)
-      .then(returned => this.props.onCreate(returned.payload))
+    return this.createCategory(description)
+      .then(returned => {
+        this.props.onCreate(returned.payload);
+        this.setState({description: ''});
+      })
       .catch(this.onError);
   }
 
   createCategory = (description) => {
     const url = API.url('/api/bank/categories');
+    const {phrase} = this.props;
 
     // {"id": "4", "description": "posto colombo", "userChosen":true, "phrases": ["COMPRA CARTAO - COMPRA no estabelecimento POSTO COLOMBO          C"]}
     const payload = {
       description: description,
       userChosen: true,
-      phrases: [this.props.phrase]
+      phrases: [phrase]
     }
 
     return axios.post(url, payload)

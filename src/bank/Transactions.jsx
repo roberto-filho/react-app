@@ -149,14 +149,13 @@ export default class Transactions extends React.Component {
   }
 
   handleSelectTransaction = (row, event, checked) => {
-    console.log(`row selected ${row.index}`, row);
     let {selectedItems} = this.state;
 
     if (checked) {
       // Add to the list
       selectedItems = selectedItems.push(row);
     }
-    
+
     if (!checked) {
       // Remove from the list
       const curentRowIndex = selectedItems
