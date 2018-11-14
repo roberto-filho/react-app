@@ -166,6 +166,14 @@ export default class Transactions extends React.Component {
     this.setState({ selectedItems });
   }
 
+  valueToCol = (moneyNumber) => {
+    if (moneyNumber < 0) {
+      // Negative
+      return `- R$ ${-moneyNumber}`;
+    }
+    return `R$ ${moneyNumber}`;
+  }
+
   paperStyle = {
     width: "80%",
     marginLeft: "auto",
@@ -217,7 +225,7 @@ export default class Transactions extends React.Component {
                   <TableCell>{row.date}</TableCell>
                   <TableCell>{row.description}</TableCell>
                   <TableCell><this.Category row={row} /></TableCell>
-                  <TableCell>{row.value}</TableCell>
+                  <TableCell>{this.valueToCol(row.value)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
