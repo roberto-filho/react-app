@@ -23,3 +23,14 @@ build:
     - docker push "$IMAGE_NAME:$CI_COMMIT_REF_SLUG"
   except:
     - master
+
+deploy-prod:
+  image: valudio/docker-sshpass:alpine
+  stage: deploy
+  script:
+    > 
+      sshpass -p $DEPLOY_PASSWD
+      ssh -o StrictHostKeyChecking=no $DEPLOY_HOST
+      "COMPOSE_FILE=$COMPOSE_FILE_LOCATION ./update-bank.sh"
+  only:
+    - master
