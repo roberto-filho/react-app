@@ -3,7 +3,6 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import NotificationSystem from 'react-notification-system';
-import API from '../api/API';
 
 export default class ProductForm extends React.Component {
 
@@ -32,7 +31,7 @@ export default class ProductForm extends React.Component {
   loadData = () => {
     if(this.state.edit_mode) {
       axios
-        .get(API.url(`/api/products/${this.state.id}`))
+        .get(`/api/products/${this.state.id}`)
         .then(res => {
           this.setState(res.data);
         });
@@ -99,7 +98,7 @@ export default class ProductForm extends React.Component {
     const isEditing = this.state.edit_mode;
 
     // Send request to the server
-    const url = API.url('/api/products')+(isEditing ? `/${this.state.id}` : '');
+    const url = '/api/products'+(isEditing ? `/${this.state.id}` : '');
 
     const method = isEditing ? axios.put : axios.post;
 

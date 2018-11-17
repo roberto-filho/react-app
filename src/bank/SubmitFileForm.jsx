@@ -5,7 +5,6 @@ import {post} from 'axios';
 import NotificationSystem from 'react-notification-system';
 
 import Transactions from './Transactions';
-import API from '../api/API';
 
 import { List } from 'immutable';
 
@@ -59,12 +58,10 @@ export default class ProductForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     
-    const url = API.url('/api/bank/upload');
-
     const formData = new FormData();
     formData.append('file', this.state.file)
 
-    post(url, formData, { headers: {'content-type': 'multipart/form-data'} })
+    post('/api/bank/upload', formData, { headers: {'content-type': 'multipart/form-data'} })
       .then(res => {
         // Show success message
         // Clear form fields

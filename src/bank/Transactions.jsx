@@ -167,15 +167,12 @@ export default class Transactions extends React.Component {
   }
 
   valueToCol = (moneyNumber) => {
-    if (moneyNumber < 0) {
-      // Negative
-      return `- R$ ${-moneyNumber}`;
-    }
-    return `R$ ${moneyNumber}`;
+    const negative = moneyNumber < 0;
+    return `${negative?'- ':'+ '}R$ ${Math.abs(moneyNumber)}`;
   }
 
   paperStyle = {
-    width: "80%",
+    width: "90%",
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: "2em",
@@ -196,7 +193,7 @@ export default class Transactions extends React.Component {
       <Paper style={this.paperStyle}>
         <NotificationSystem ref= 'notifications' />
         <If condition={show}>
-          <Table>
+          <Table style={{tableLayout: 'auto'}}>
             <TableHead>
               <TableRow>
                 <TableCell>

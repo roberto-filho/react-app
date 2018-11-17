@@ -11,7 +11,6 @@ import TableRow from '@material-ui/core/TableRow';
 import NotificationSystem from 'react-notification-system';
 
 import { If, Then, Else } from 'react-if';
-import API from '../api/API';
 
 export default class Products extends React.Component {
 
@@ -25,7 +24,7 @@ export default class Products extends React.Component {
 
   loadData = () => {
     axios
-      .get(API.url('/api/bank/categories'))
+      .get('/api/bank/categories')
       .then(res => {
         this.setState({categories: res.data});
         return res;
