@@ -5,6 +5,7 @@ import ProductForm from '../products/ProductForm';
 import BankSubmit from '../bank/SubmitFileForm';
 import Transactions from "../bank/Transactions";
 import Categories from '../categories/Categories';
+import Uploads from '../uploads/Uploads';
 
 export default class RoutesRenderer extends React.Component {
   render() {
@@ -16,6 +17,7 @@ export default class RoutesRenderer extends React.Component {
         <Route path='/products' component={Products} />
         <Route path='/transactions' component={Transactions} />
         <Route path='/categories' component={Categories} />
+        <Route path='/uploads' component={Uploads} />
       </Switch>
     )
   }
