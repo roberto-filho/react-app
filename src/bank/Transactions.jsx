@@ -19,7 +19,7 @@ import {If} from 'react-control-statements';
 import QuickCreateCategory from '../quick-create/QuickCreateCategory';
 import { List } from 'immutable';
 
-export default class Transactions extends React.Component {
+export default class Transactions extends React.PureComponent {
 
   static propTypes = {
     data: PropTypes.objectOf(List),
@@ -176,6 +176,7 @@ export default class Transactions extends React.Component {
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: "2em",
+    marginBottom: "2em",
   };
 
   render() {
@@ -206,7 +207,7 @@ export default class Transactions extends React.Component {
                 <TableCell>DATE</TableCell>
                 <TableCell>DESCRIPTION</TableCell>
                 <TableCell>TAGS</TableCell>
-                <TableCell>Value</TableCell>
+                <TableCell>VALUE</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

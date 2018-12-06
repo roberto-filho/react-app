@@ -10,7 +10,8 @@ import TableRow from '@material-ui/core/TableRow';
 
 import NotificationSystem from 'react-notification-system';
 
-import { If, Then, Else } from 'react-if';
+import { Choose, When, Otherwise } from 'react-control-statements';
+import { Link } from 'react-router-dom';
 
 export default class Uploads extends React.Component {
 
@@ -22,7 +23,7 @@ export default class Uploads extends React.Component {
     }
   }
 
-  loadData = () => {
+  loadData = (isReload) => {
     axios
       .get('/api/bank/uploaded-headers')
       .then(res => {
@@ -32,6 +33,8 @@ export default class Uploads extends React.Component {
       .then((res) => {
         if(res.data.length < 1) {
           this.notifyInfo('No data to display.');
+        } else if(isReload) {
+          this.notifyInfo('Refreshed.');
         }
       })
       .catch(error => {
@@ -74,39 +77,50 @@ export default class Uploads extends React.Component {
     return <div>
       <NotificationSystem ref="notifications" />
 
-      <If condition={uploads.length > 0}>
-      <Then>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Account</TableCell>
-              <TableCell>Start date</TableCell>
-              <TableCell>End date</TableCell>
-              <TableCell>Date uploaded</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {uploads.map( (row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.accountNumber}</TableCell>
-                <TableCell>{row.startDate}</TableCell>
-                <TableCell>{row.endDate}</TableCell>
-                <TableCell>{row.createdAt}</TableCell>
+      <Choose>
+        <When condition={uploads.length > 0}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Account</TableCell>
+                <TableCell>Start date</TableCell>
+                <TableCell>End date</TableCell>
+                <TableCell>Date uploaded</TableCell>
+                <TableCell></TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Then>
-      <Else>
-        <center><h1>NO DATA</h1></center>
-      </Else>
-      </If>
+            </TableHead>
+            <TableBody>
+              {uploads.map( (row, index) => (
+                <TableRow key={index}>
+                  <TableCell>{row.accountNumber}</TableCell>
+                  <TableCell>{row.startDate}</TableCell>
+                  <TableCell>{row.endDate}</TableCell>
+                  <TableCell>{row.createdAt}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="text"
+                      color="secondary"
+                      mini={true}
+                      component={Link}
+                      to={`/uploads/${row._id}`}>
+                      Show
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </When>
+        <Otherwise>
+          <center><h1>NO DATA</h1></center>
+        </Otherwise>
+      </Choose>
       
       <br />
       <Button
         variant="contained"
         color="secondary"
-        onClick={this.loadData}>
+        onClick={this.loadData.bind(this, true)}>
         Reload
       </Button>
     </div>

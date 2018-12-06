@@ -10,9 +10,9 @@ import TableRow from '@material-ui/core/TableRow';
 
 import NotificationSystem from 'react-notification-system';
 
-import { If, Then, Else } from 'react-if';
+import { Choose, When, Otherwise } from 'react-control-statements';
 
-export default class Products extends React.Component {
+export default class Categories extends React.Component {
 
   constructor(props) {
     super(props);
@@ -73,33 +73,34 @@ export default class Products extends React.Component {
     return <div>
       <NotificationSystem ref="notifications" />
 
-      <If condition={this.state.categories.length > 0}>
-      <Then>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Keywords</TableCell>
-              <TableCell>Phrases</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.state.categories.map( (row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.description}</TableCell>
-                <TableCell>{JSON.stringify(row.keywords)}</TableCell>
-                <TableCell>{JSON.stringify(row.phrases)}</TableCell>
+      <Choose>
+        <When condition={this.state.categories.length > 0}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Keywords</TableCell>
+                <TableCell>Phrases</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Then>
-      <Else>
-        <center><h1>NO DATA</h1></center>
-      </Else>
-      </If>
+            </TableHead>
+            <TableBody>
+              {this.state.categories.map( (row, index) => (
+                <TableRow key={index}>
+                  <TableCell>{row.id}</TableCell>
+                  <TableCell>{row.description}</TableCell>
+                  <TableCell>{JSON.stringify(row.keywords)}</TableCell>
+                  <TableCell>{JSON.stringify(row.phrases)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </When>
+
+        <Otherwise>
+          <center><h1>NO DATA</h1></center>
+        </Otherwise>
+      </Choose>
       
       <br />
       <Button

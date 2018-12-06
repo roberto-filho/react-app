@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
@@ -11,7 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import axios from 'axios';
 
-export default class QuickCreateCategory extends PureComponent {
+export default class QuickCreateCategory extends Component {
 
   static propTypes = {
     onCancel: PropTypes.func,
@@ -86,8 +86,8 @@ export default class QuickCreateCategory extends PureComponent {
       <Dialog
           open={open}
           onClose={this.props.onClose}
-          aria-labelledby="form-dialog-title"
-        >
+          aria-labelledby="form-dialog-title">
+
           <DialogTitle id="form-dialog-title">Create category</DialogTitle>
           <DialogContent>
             <TextField
