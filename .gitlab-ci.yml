@@ -5,12 +5,10 @@ image: docker:latest
 services:
   - docker:dind
 
-before_script:
-  - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD" # $CI_REGISTRY
-
 build-master:
   stage: build
   script:
+    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD" # $CI_REGISTRY
     - docker build --pull -t "$IMAGE_NAME" .
     - docker push "$IMAGE_NAME"
   only:
@@ -19,6 +17,7 @@ build-master:
 build:
   stage: build
   script:
+    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD" # $CI_REGISTRY
     - docker build --pull -t "$IMAGE_NAME:$CI_COMMIT_REF_SLUG" .
     - docker push "$IMAGE_NAME:$CI_COMMIT_REF_SLUG"
   except:
