@@ -28,7 +28,7 @@ export default class UploadedTransactions extends React.PureComponent {
       .then(response => {
         if(response.status === 200) {
           this.setState({
-            trxs: List(response.data),
+            trxs: List(response.data || []),
             showTable: true
           });
         }
@@ -73,7 +73,8 @@ export default class UploadedTransactions extends React.PureComponent {
           <When condition={hasData}>
               <Transactions
                 data={trxs}
-                show={showTable} />
+                show={showTable}
+                hideCategories />
           </When>
           <Otherwise>
             <center><h1>NO DATA</h1></center>

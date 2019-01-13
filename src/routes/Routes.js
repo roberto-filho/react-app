@@ -1,22 +1,14 @@
-import Products from '../products/Products';
-import ProductForm from '../products/ProductForm';
 import Transactions from "../bank/Transactions";
 import Categories from '../categories/Categories';
 import Uploads from '../uploads/Uploads';
-import UploadTransactions from '../bank/UploadedTransactions';
+import UploadedTransactions from '../bank/UploadedTransactions';
+import SubmitFileForm from '../bank/SubmitFileForm';
 
 export default Object.freeze([
   {
-    path: '/products/new',
-    component: ProductForm,
-  },
-  {
-    path: '/products/:id',
-    component: ProductForm,
-  },
-  {
-    path: '/products',
-    component: Products,
+    path: '/',
+    component: SubmitFileForm,
+    exact: true,
   },
   {
     path: '/transactions',
@@ -33,6 +25,6 @@ export default Object.freeze([
   },
   {
     path: '/uploads/:id',
-    component: UploadTransactions,
+    component: UploadedTransactions,
   },
 ]);

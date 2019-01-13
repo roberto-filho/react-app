@@ -19,11 +19,14 @@ import {If} from 'react-control-statements';
 import QuickCreateCategory from '../quick-create/QuickCreateCategory';
 import { List } from 'immutable';
 
+const EMPTY = null;
+
 export default class Transactions extends React.PureComponent {
 
   static propTypes = {
     data: PropTypes.objectOf(List),
-    show: PropTypes.bool
+    show: PropTypes.bool,
+    hideCategories: PropTypes.bool,
   }
 
   constructor(props) {
@@ -48,7 +51,7 @@ export default class Transactions extends React.PureComponent {
     });
   }
 
-  handleCategories = (categories) => {
+  getCategoryArray = (categories) => {
     // Check if it's an array
     if (categories instanceof Array) {
       return categories;
@@ -109,9 +112,9 @@ export default class Transactions extends React.PureComponent {
 
   Category = (params) => {
     const {row} = params;
-    const categoriesArray = this.handleCategories(row.categories);
+    const categoriesArray = this.getCategoryArray(row.categories);
     
-    if (row.categories.id === 'x') {
+    if (!row.categories || row.categories.id === 'x') {
       // It's uncategorized, render the other one
       return (
         <this.UncategorizedButton row={row} />
@@ -171,6 +174,22 @@ export default class Transactions extends React.PureComponent {
     return `${negative?'- ':'+ '}R$ ${Math.abs(moneyNumber)}`;
   }
 
+  CategoryHeader = (props) => {
+    if (props.show) {
+      return <TableCell>TAGS</TableCell>;
+    } else {
+      return EMPTY;
+    }
+  }
+
+  CategoryCell = (props) => {
+    if (props.show) {
+      return <TableCell><this.Category row={props.row} /></TableCell>
+    } else {
+      return EMPTY;
+    }
+  }
+
   paperStyle = {
     width: "90%",
     marginLeft: "auto",
@@ -180,7 +199,7 @@ export default class Transactions extends React.PureComponent {
   };
 
   render() {
-    const {show, data} = this.props;
+    const {show, data, hideCategories} = this.props;
     const {
       openCreateCategoryDialog,
       row = {},
@@ -189,6 +208,8 @@ export default class Transactions extends React.PureComponent {
     } = this.state;
 
     const selectedIndexes = selectedItems.map(t => t.index);
+
+    const showCategories = hideCategories !== undefined ? false : true;
 
     return (
       <Paper style={this.paperStyle}>
@@ -206,7 +227,7 @@ export default class Transactions extends React.PureComponent {
                 <TableCell>ID</TableCell>
                 <TableCell>DATE</TableCell>
                 <TableCell>DESCRIPTION</TableCell>
-                <TableCell>TAGS</TableCell>
+                <this.CategoryHeader show={showCategories} />
                 <TableCell>VALUE</TableCell>
               </TableRow>
             </TableHead>
@@ -222,7 +243,7 @@ export default class Transactions extends React.PureComponent {
                   <TableCell>{row.index}</TableCell>
                   <TableCell>{row.date}</TableCell>
                   <TableCell>{row.description}</TableCell>
-                  <TableCell><this.Category row={row} /></TableCell>
+                  <this.CategoryCell show={showCategories} row={row} />
                   <TableCell>{this.valueToCol(row.value)}</TableCell>
                 </TableRow>
               ))}

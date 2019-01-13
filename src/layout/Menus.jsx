@@ -1,7 +1,6 @@
 import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import DraftsIcon from '@material-ui/icons/Drafts';
 import HomeIcon from '@material-ui/icons/Home';
 import StyleIcon from '@material-ui/icons/Style';
 import CloudDone from '@material-ui/icons/CloudDone';
@@ -30,7 +29,6 @@ export default class Menus extends React.Component {
   render() {
     return ([
       this.createMenuItem('1', '/', 'Home', <HomeIcon />),
-      this.createMenuItem('2', '/products', 'Products', <DraftsIcon />),
       this.createMenuItem('3', '/categories', 'Tags', <StyleIcon />),
       this.createMenuItem('4', '/uploads', 'Uploads', <CloudDone />),
     ])
