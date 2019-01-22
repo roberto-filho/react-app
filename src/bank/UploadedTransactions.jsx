@@ -3,6 +3,7 @@ import {get} from 'axios';
 import NotificationSystem from 'react-notification-system';
 
 import Transactions from './Transactions';
+import EmptyState from '../screens/EmtpyScreen';
 
 import { List } from 'immutable';
 import { Choose, When, Otherwise } from 'react-control-statements';
@@ -77,7 +78,7 @@ export default class UploadedTransactions extends React.PureComponent {
                 hideCategories />
           </When>
           <Otherwise>
-            <center><h1>NO DATA</h1></center>
+            <EmptyState />
           </Otherwise>
         </Choose>
       </div>
