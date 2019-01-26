@@ -14,7 +14,7 @@ import NotificationSystem from 'react-notification-system';
 
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
-import {Choose, When, Otherwise} from 'react-control-statements';
+import {Choose, When} from 'react-control-statements';
 
 import QuickCreateCategory from '../quick-create/QuickCreateCategory';
 import { List } from 'immutable';
@@ -248,7 +248,7 @@ export default class Transactions extends React.PureComponent {
                     <TableCell>{row.date}</TableCell>
                     <TableCell>{row.description}</TableCell>
                     <this.CategoryCell show={showCategories} row={row} />
-                    <TableCell>{this.valueToCol(row.value)}</TableCell>
+                    <TableCell align="right">{this.valueToCol(row.value)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
