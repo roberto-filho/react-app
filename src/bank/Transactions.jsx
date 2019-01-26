@@ -14,10 +14,11 @@ import NotificationSystem from 'react-notification-system';
 
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
-import {If} from 'react-control-statements';
+import {Choose, When, Otherwise} from 'react-control-statements';
 
 import QuickCreateCategory from '../quick-create/QuickCreateCategory';
 import { List } from 'immutable';
+import EmptyScreen from '../screens/EmtpyScreen';
 
 const EMPTY = null;
 
@@ -209,54 +210,61 @@ export default class Transactions extends React.PureComponent {
 
     const selectedIndexes = selectedItems.map(t => t.index);
 
-    const showCategories = hideCategories !== undefined ? false : true;
+    const showCategories = hideCategories === undefined || hideCategories === false;
+
+    const hasData = data && data.size;
 
     return (
       <Paper style={this.paperStyle}>
         <NotificationSystem ref= 'notifications' />
-        <If condition={show}>
-          <Table style={{tableLayout: 'auto'}}>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Checkbox
-                    checked={selectAll} 
-                    onChange={this.handleSelectAll}
-                    indeterminate={selectAll && selectedItems.size !== data.size} />
-                </TableCell>
-                <TableCell>ID</TableCell>
-                <TableCell>DATE</TableCell>
-                <TableCell>DESCRIPTION</TableCell>
-                <this.CategoryHeader show={showCategories} />
-                <TableCell>VALUE</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map( (row, index) => (
-                <TableRow key={index}>
+        <Choose>
+          <When condition={show && hasData}>
+            <Table style={{tableLayout: 'auto'}}>
+              <TableHead>
+                <TableRow>
                   <TableCell>
-                    <Checkbox 
-                      checked={selectedIndexes.includes(row.index)}
-                      onChange={this.handleSelectTransaction.bind(this, row)}
-                      />
+                    <Checkbox
+                      checked={selectAll} 
+                      onChange={this.handleSelectAll}
+                      indeterminate={selectAll && selectedItems.size !== data.size} />
                   </TableCell>
-                  <TableCell>{row.index}</TableCell>
-                  <TableCell>{row.date}</TableCell>
-                  <TableCell>{row.description}</TableCell>
-                  <this.CategoryCell show={showCategories} row={row} />
-                  <TableCell>{this.valueToCol(row.value)}</TableCell>
+                  <TableCell>ID</TableCell>
+                  <TableCell>DATE</TableCell>
+                  <TableCell>DESCRIPTION</TableCell>
+                  <this.CategoryHeader show={showCategories} />
+                  <TableCell>VALUE</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {data.map( (row, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Checkbox 
+                        checked={selectedIndexes.includes(row.index)}
+                        onChange={this.handleSelectTransaction.bind(this, row)}
+                        />
+                    </TableCell>
+                    <TableCell>{row.index}</TableCell>
+                    <TableCell>{row.date}</TableCell>
+                    <TableCell>{row.description}</TableCell>
+                    <this.CategoryCell show={showCategories} row={row} />
+                    <TableCell>{this.valueToCol(row.value)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
 
-          <QuickCreateCategory
-            phrase={row.description}
-            onCancel={this.handleCreateCategoryClose.bind(this, 'canceled')}
-            onCreate={this.handleCreateCategoryClose.bind(this, 'created')}
-            open={openCreateCategoryDialog} />
+            <QuickCreateCategory
+              phrase={row.description}
+              onCancel={this.handleCreateCategoryClose.bind(this, 'canceled')}
+              onCreate={this.handleCreateCategoryClose.bind(this, 'created')}
+              open={openCreateCategoryDialog} />
 
-        </If>
+          </When>
+          <When condition={show && !hasData}>
+            <EmptyScreen />
+          </When>
+        </Choose>
       </Paper>
     );
   }

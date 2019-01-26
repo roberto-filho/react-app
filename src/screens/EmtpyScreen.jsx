@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 
-export default class Transactions extends React.PureComponent {
+export default class EmptyScreen extends PureComponent {
   
   render() {
 
