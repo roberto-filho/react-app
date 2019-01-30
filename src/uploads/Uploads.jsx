@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 
@@ -12,6 +12,8 @@ import NotificationSystem from 'react-notification-system';
 
 import { Choose, When, Otherwise } from 'react-control-statements';
 import { Link } from 'react-router-dom';
+import { Grid } from '@material-ui/core';
+import EmptyScreen from '../screens/EmtpyScreen';
 
 export default class Uploads extends React.Component {
 
@@ -72,9 +74,36 @@ export default class Uploads extends React.Component {
     return errorMessage;
   }
 
+  renderRowButtons = (row) => {
+    return (
+      <Grid container spacing={8}>
+        <Grid item xs={6}>
+          <Button
+            variant="contained"
+            color="secondary"
+            mini={true}
+            component={Link}
+            to={`/uploads/${row._id}/categorized`}>
+            Categorized
+          </Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="text"
+            color="secondary"
+            mini={true}
+            component={Link}
+            to={`/uploads/${row._id}`}>
+            Show
+          </Button>
+        </Grid>
+      </Grid>
+    )
+  }
+
   render() {
     const {uploads} = this.state;
-    return <div>
+    return <Fragment>
       <NotificationSystem ref="notifications" />
 
       <Choose>
@@ -97,14 +126,7 @@ export default class Uploads extends React.Component {
                   <TableCell>{row.endDate}</TableCell>
                   <TableCell>{row.createdAt}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="text"
-                      color="secondary"
-                      mini={true}
-                      component={Link}
-                      to={`/uploads/${row._id}`}>
-                      Show
-                    </Button>
+                    {this.renderRowButtons(row)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -112,7 +134,7 @@ export default class Uploads extends React.Component {
           </Table>
         </When>
         <Otherwise>
-          <center><h1>NO DATA</h1></center>
+          <EmptyScreen />
         </Otherwise>
       </Choose>
       
@@ -123,6 +145,6 @@ export default class Uploads extends React.Component {
         onClick={this.loadData.bind(this, true)}>
         Reload
       </Button>
-    </div>
+    </Fragment>
   }
 };

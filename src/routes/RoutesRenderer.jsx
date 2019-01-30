@@ -10,7 +10,7 @@ export default class RoutesRenderer extends React.Component {
           routes.map((route, index) => (
             <Route
               key={index}
-              exact={route.exact}
+              exact={route.exact || true}
               path={route.path}
               component={route.component} />
           ))

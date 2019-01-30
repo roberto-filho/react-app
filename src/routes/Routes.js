@@ -3,12 +3,12 @@ import Categories from '../categories/Categories';
 import Uploads from '../uploads/Uploads';
 import UploadedTransactions from '../bank/UploadedTransactions';
 import SubmitFileForm from '../bank/SubmitFileForm';
+import Categorized from '../categorized/Categorized';
 
 export default Object.freeze([
   {
     path: '/',
     component: SubmitFileForm,
-    exact: true,
   },
   {
     path: '/transactions',
@@ -21,10 +21,13 @@ export default Object.freeze([
   {
     path: '/uploads',
     component: Uploads,
-    exact: true,
   },
   {
     path: '/uploads/:id',
     component: UploadedTransactions,
+  },
+  {
+    path: '/uploads/:id/categorized',
+    component: Categorized,
   },
 ]);
